@@ -21,6 +21,9 @@ public class Medication {
     @Pattern(regexp="^[A-Z0-9_]*$",message="Invalid Medication Name")
     private String code;
 
+    @ManyToOne
+    @JoinColumn(name="drone_id", nullable=false)
+    private Drone drone;
     @Lob
     @Column
     private byte[] image;

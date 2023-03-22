@@ -3,6 +3,8 @@ package com.musala.task.drones.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 
+import java.util.List;
+
 @Entity
 @Table
 public class Drone {
@@ -23,6 +25,9 @@ public class Drone {
 
     @Column
     private State state;
+
+    @OneToMany(mappedBy="drone")
+    private List<Medication> items;
 
     public Long getId() {
         return id;
@@ -62,5 +67,13 @@ public class Drone {
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    public List<Medication> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Medication> items) {
+        this.items = items;
     }
 }
