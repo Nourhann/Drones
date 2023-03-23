@@ -6,9 +6,12 @@ import com.musala.task.drones.exceptions.NotFoundException;
 import com.musala.task.drones.model.Drone;
 import com.musala.task.drones.model.Medication;
 import com.musala.task.drones.repo.DroneRepository;
+import com.musala.task.drones.repo.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +23,8 @@ public class DroneServiceImp implements DroneService{
     private static int DRONE_MIN_BATTERY_ALLOWED= 25;
     @Autowired
     DroneRepository droneRepository;
+    @Autowired
+    MedicationRepository medicationRepository;
 
     @Override
     public Drone register(Drone drone) {
@@ -27,8 +32,8 @@ public class DroneServiceImp implements DroneService{
     }
 
     @Override
-    public Drone load(long droneId, List<Medication> items) throws ExceedWeightException, NotFoundException, NotEnoughChargeException {
-        long totalWeight=0;
+    public void load(long droneId, List<Medication> items, List<MultipartFile> files) throws ExceedWeightException, NotFoundException, NotEnoughChargeException, IOException {
+        double totalWeight=0;
         Optional<Drone> drone = droneRepository.findById (droneId);
         if(drone.isEmpty()){
             throw new NotFoundException("Drone with id = "+ droneId + " not found");
@@ -40,8 +45,18 @@ public class DroneServiceImp implements DroneService{
             totalWeight+=medication.getWeight();
         }
         if(totalWeight <= DRONE_MAX_WEIGHT){
-            drone.get().setItems(items);
-            return droneRepository.save(drone.get());
+            for(MultipartFile file : files){
+                Medication med = items.stream()
+                        .filter(medication -> file.getOriginalFilename().substring(0,file.getOriginalFilename().indexOf('.'))
+                                .contains(medication.getName()))
+                        .findAny()
+                        .orElse(null);
+                if(med != null){
+                    med.setImage(file.getBytes());
+                    med.setDrone(drone.get());
+                }
+            }
+            medicationRepository.saveAll(items);
         }
         else{
            throw new ExceedWeightException("Medication List Weight Exceed The Drone Max Weight");
@@ -51,10 +66,11 @@ public class DroneServiceImp implements DroneService{
     @Override
     public List<Medication> getLoadedItems(long droneId) throws NotFoundException {
         Optional<Drone> drone = droneRepository.findById (droneId);
+        List<Medication> medications = medicationRepository.findByDrone(drone.get());
         if(drone.isEmpty()){
             throw new NotFoundException("Drone with id = "+ droneId + " not found");
         }
-        return drone.get().getItems();
+        return medications;
     }
 
     @Override
@@ -69,7 +85,7 @@ public class DroneServiceImp implements DroneService{
 
     @Override
     public String getBatteryCapacity(long droneId) throws NotFoundException {
-        Optional<Drone> drone = droneRepository.findById (droneId);
+        Optional<Drone> drone = droneRepository.findById(droneId);
         if(drone.isEmpty()){
             throw new NotFoundException("Drone with id = "+ droneId + " not found");
         }

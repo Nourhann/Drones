@@ -9,10 +9,15 @@ import com.musala.task.drones.service.DroneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class DroneController {
@@ -32,14 +37,15 @@ public class DroneController {
         return new ResponseEntity<> (items, HttpStatus.OK);
     }
 
-    @PostMapping("/drone/load/{id}")
-    public ResponseEntity<Drone> load(@PathVariable("id") long droneId,@RequestBody List<Medication> items) throws ExceedWeightException, NotFoundException, NotEnoughChargeException, InstantiationException {
-        Drone savedDrone = droneService.load(droneId,items);
-        return new ResponseEntity<> (savedDrone, HttpStatus.OK);
+    @RequestMapping(path = "/drone/load/{id}", method = POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity load(@PathVariable("id") long droneId,@RequestPart("medications") List<Medication> items,
+                                      @RequestPart("images") List<MultipartFile> files) throws ExceedWeightException, NotFoundException, NotEnoughChargeException, InstantiationException, IOException {
+        droneService.load(droneId,items,files);
+        return new ResponseEntity<> (HttpStatus.OK);
     }
 
     @GetMapping("/drone")
-    public ResponseEntity<List<Drone>> getDronesList() throws NotFoundException {
+    public ResponseEntity<List<Drone>> getDronesList() {
         List<Drone> drones = droneService.getAvailableDrones();
         return new ResponseEntity<> (drones, HttpStatus.OK);
     }

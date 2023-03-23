@@ -26,9 +26,6 @@ public class Drone {
     @Column
     private State state;
 
-    @OneToMany(mappedBy="drone")
-    private List<Medication> items;
-
     public Long getId() {
         return id;
     }
@@ -69,11 +66,4 @@ public class Drone {
         this.state = state;
     }
 
-    public List<Medication> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Medication> items) {
-        this.items = items;
-    }
 }

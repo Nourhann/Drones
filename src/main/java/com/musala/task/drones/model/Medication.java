@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Pattern;
 public class Medication {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -22,7 +23,7 @@ public class Medication {
     private String code;
 
     @ManyToOne
-    @JoinColumn(name="drone_id", nullable=false)
+    @JoinColumn(name="drone_id")
     private Drone drone;
     @Lob
     @Column
@@ -66,5 +67,13 @@ public class Medication {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public Drone getDrone() {
+        return drone;
+    }
+
+    public void setDrone(Drone drone) {
+        this.drone = drone;
     }
 }
