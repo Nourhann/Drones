@@ -105,6 +105,46 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "loading a drone with medication items;",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "images",
+							"type": "file",
+							"src": [
+								"/C:/Users/admin/Documents/Drones/fileForTest/cat1.jpg",
+								"/C:/Users/admin/Documents/Drones/fileForTest/cat2.jpg"
+							]
+						},
+						{
+							"key": "medications",
+							"value": "[\n{\"name\" : \"cat1\",\n \"weight\" : 2.5},\n{\"name\" : \"cat2\",\n \"weight\" : 2.5}\n]",
+							"contentType": "application/json",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8085/drone/load/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"drone",
+						"load",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
