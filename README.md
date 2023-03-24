@@ -29,3 +29,7 @@ Project uses H2 database -In Memory db - when you run the app it will be initial
 ## REST API
 REST API [postmanCollection](/Drone.postman_collection.json)
 
+## notes
+
+-- when using Loading a drone with medication items api images name should be the same name as medication name in the request
+
