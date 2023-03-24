@@ -3,6 +3,8 @@ package com.musala.task.drones.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 
+import java.util.List;
+
 @Entity
 @Table
 public class Drone {
@@ -63,4 +65,5 @@ public class Drone {
     public void setState(State state) {
         this.state = state;
     }
+
 }
