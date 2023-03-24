@@ -66,10 +66,10 @@ public class DroneServiceImp implements DroneService{
     @Override
     public List<Medication> getLoadedItems(long droneId) throws NotFoundException {
         Optional<Drone> drone = droneRepository.findById (droneId);
-        List<Medication> medications = medicationRepository.findByDrone(drone.get());
         if(drone.isEmpty()){
             throw new NotFoundException("Drone with id = "+ droneId + " not found");
         }
+        List<Medication> medications = medicationRepository.findByDrone(drone.get());
         return medications;
     }
 
