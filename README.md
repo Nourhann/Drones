@@ -26,4 +26,6 @@ mvn clean install -DskipTests
 ## Database 
 Project uses H2 database -In Memory db - when you run the app it will be initialized for you
 
+## REST API
+REST API [postmanCollection](/Drone.postman_collection.json)
 
