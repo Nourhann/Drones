@@ -5,6 +5,7 @@ import com.musala.task.drones.exceptions.NotEnoughChargeException;
 import com.musala.task.drones.exceptions.NotFoundException;
 import com.musala.task.drones.model.Drone;
 import com.musala.task.drones.model.Medication;
+import com.musala.task.drones.model.State;
 import com.musala.task.drones.repo.DroneRepository;
 import com.musala.task.drones.repo.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,8 @@ public class DroneServiceImp implements DroneService{
         else{
            throw new ExceedWeightException("Medication List Weight Exceed The Drone Max Weight");
         }
+        drone.get().setState(State.LOADED);
+        droneRepository.save(drone.get());
     }
 
     @Override
